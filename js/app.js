@@ -41,7 +41,9 @@
       '</div>';
   }
   var TEGNSPROG = 'https://tegnsprog.dk/';
-  function videoURL(s) { return 'https://www.youtube.com/results?search_query=' + encodeURIComponent('babytegn ' + (s.vq || s.word)); }
+  function ytURL(s) { return 'https://www.youtube.com/results?search_query=' + encodeURIComponent('babytegn ' + (s.vq || s.word)); }
+  // primary video: the exact sign in Ordbog over Dansk Tegnsprog, else a YouTube search
+  function videoURL(s) { var t = TS.tegn(s.id); return t ? 'https://tegnsprog.dk/tegn/' + t + '?marker=' + encodeURIComponent(s.vq || s.word) : ytURL(s); }
 
   /* ---------- views ---------- */
   function groupedOrdbogHTML(mode) {
@@ -121,14 +123,16 @@
       '<div class="detail-tile"><span class="tw">' + esc(s.word) + '</span></div>' +
       '<h1>' + esc(s.word) + '</h1>' +
       (s.stage ? '<div class="agechip">Kan typisk læres ' + esc(TS.stage(s.stage).label) + '</div>' : '') +
-      '<a class="btn btn-video" href="' + videoURL(s) + '" target="_blank" rel="noopener">' + ICON.play + ' Se video af tegnet</a>' +
+      '<a class="btn btn-video" href="' + videoURL(s) + '" target="_blank" rel="noopener">' + ICON.play +
+        (TS.tegn(s.id) ? ' Se video af tegnet' : ' Se videoer (YouTube)') + '</a>' +
       '<div class="howbox"><div class="label">Sådan gør du</div><p>' + esc(s.how) + '</p></div>' +
       '<div class="tipbox"><div class="label">Brug det når…</div><p>' + esc(s.tip) + '</p></div>' +
       '<div class="btnrow">' +
         '<button class="btn ' + (done ? 'btn-learned' : 'btn-ghost') + '" id="learnbtn">' +
           (done ? ICON.check + ' Lært' : ICON.plus + ' Marker som lært') + '</button>' +
-        '<a class="official" href="' + TEGNSPROG + '" target="_blank" rel="noopener">' +
-          ICON.ext + ' Officielt tegn i Ordbog over Dansk Tegnsprog</a>' +
+        (TS.tegn(s.id)
+          ? '<a class="official" href="' + ytURL(s) + '" target="_blank" rel="noopener">' + ICON.ext + ' Se det med en baby (YouTube)</a>'
+          : '<a class="official" href="' + TEGNSPROG + '" target="_blank" rel="noopener">' + ICON.ext + ' Ordbog over Dansk Tegnsprog</a>') +
       '</div>' +
       '<div class="pager">' +
         (prev ? '<a class="prev" data-go="#/tegn/' + prev.id + '">' + ICON.back + ' ' + esc(prev.word) + '</a>' : '<a class="prev disabled"></a>') +
@@ -223,9 +227,9 @@
         'Tegnene i Tegnspire er danske babytegn fra dansk tegnsprog, krydstjekket mod to uafhængige danske dagtilbuds-materialer: ' +
         '<em>“Baby- og Børnetegn”</em> af Vibeke Manniche (Sct. Severin Børnehuse / Dagtilbud-Syd, Kerteminde) og ' +
         'Rikke Winckler’s babytegn-oversigt (rikkewinckler.dk, Vuggestuen Margrethevej). ' +
-        'Hvert tegn har en knap <strong>“Se video”</strong>, der åbner rigtige videoer af tegnet — så du ser den præcise bevægelse fra nogen der laver den. ' +
-        'Det officielle opslagsværk er ' +
-        '<a href="' + TEGNSPROG + '" target="_blank" rel="noopener">Ordbog over Dansk Tegnsprog (tegnsprog.dk)</a>.</div>' +
+        'Hvert tegn har en knap <strong>“Se video”</strong>, der går direkte til tegnets egen video i ' +
+        '<a href="' + TEGNSPROG + '" target="_blank" rel="noopener">Ordbog over Dansk Tegnsprog (tegnsprog.dk)</a> — så du ser den præcise bevægelse fra det officielle opslagsværk. ' +
+        'Et par helt baby-specifikke tegn (sut, ble) findes ikke i ordbogen og linker i stedet til babytegn-videoer på YouTube.</div>' +
       '<p class="disclaimer">Tegnspire er et lille hobbyprojekt lavet med kærlighed. Det erstatter ikke sundhedsplejerske eller fagperson.</p>' +
       '</div>';
     render(html, 'om');

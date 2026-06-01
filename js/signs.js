@@ -178,11 +178,23 @@
     { t: 'Vær tålmodig', d: 'Der går som regel 1–2 måneder før barnet selv laver et tegn. Det er helt normalt — bliv ved. Alle børn er forskellige.' }
   ];
 
+  // Specific video: each sign's permalink-ID in Ordbog over Dansk Tegnsprog
+  // (tegnsprog.dk/tegn/<ID>) — looked up & verified one by one. Signs not in the
+  // formal dictionary (sut, ble) are omitted → they fall back to a YouTube search.
+  var TEGN = {
+    spise: 301, drikke: 108, mere: 749, sove: 1043, faerdig: 664, vaske: 374,
+    'toj-paa': 1315, 'toj-af': 663, mor: 305, far: 306, hjaelp: 525, av: 569,
+    stop: 753, barnevogn: 1367, ked: 638, soed: 540, bange: 423, vred: 1097,
+    hvor: 1227, kat: 1479, fugl: 358, ko: 1918, hund: 482, bog: 294,
+    musik: 1218, cykle: 593, lege: 204
+  };
+
   window.TS = {
     SIGNS: SIGNS, CATEGORIES: CATEGORIES, STAGES: STAGES, LESSONS: LESSONS,
     CHEATS: CHEATS, METHOD: METHOD,
     byId: function (id) { return SIGNS.filter(function (s) { return s.id === id; })[0]; },
     stage: function (n) { return STAGES.filter(function (s) { return s.id === n; })[0]; },
-    cat: function (id) { return CATEGORIES.filter(function (c) { return c.id === id; })[0]; }
+    cat: function (id) { return CATEGORIES.filter(function (c) { return c.id === id; })[0]; },
+    tegn: function (id) { return TEGN[id]; }
   };
 })();
