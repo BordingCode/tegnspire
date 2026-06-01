@@ -1,0 +1,172 @@
+:root{
+  --bg:#fbf6ee; --card:#ffffff; --ink:#3f3a36; --muted:#8a8178;
+  --green:#5a9e83; --green-d:#3f7d66; --green-l:#eaf4ee;
+  --coral:#e9806e; --peach:#fbe4d4; --sun:#f4c64a;
+  --line:#efe6da; --shadow:0 6px 20px rgba(120,98,70,.10);
+  --radius:20px; --tab-h:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Nunito',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased; line-height:1.5;
+  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom));
+}
+h1,h2,h3,.brandtext{font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;line-height:1.15;margin:0}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(10px + env(safe-area-inset-top)) 18px 10px;
+  background:rgba(251,246,238,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:9px}
+.brandmark{width:34px;height:34px;flex:0 0 auto}
+.brandtext{font-size:22px;color:var(--green-d);letter-spacing:.2px}
+.progresschip{
+  font-weight:700;font-size:13px;color:var(--green-d);
+  background:var(--green-l);border-radius:999px;padding:6px 12px;white-space:nowrap;
+}
+
+/* ---------- layout ---------- */
+.view{max-width:760px;margin:0 auto;padding:18px 16px 28px}
+.page-h{margin:6px 2px 4px;font-size:26px;color:var(--green-d)}
+.page-sub{margin:0 2px 18px;color:var(--muted);font-size:15px}
+
+/* ---------- search ---------- */
+.search{position:relative;margin:0 0 18px}
+.search input{
+  width:100%;border:2px solid var(--line);background:var(--card);
+  border-radius:14px;padding:13px 14px 13px 42px;font-size:16px;color:var(--ink);
+  box-shadow:var(--shadow);
+}
+.search input:focus{outline:none;border-color:var(--green)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted)}
+
+/* ---------- category & grids ---------- */
+.cat-h{display:flex;align-items:center;gap:10px;margin:22px 2px 12px;font-size:14px;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--green);font-weight:700}
+.cat-h::after{content:"";flex:1;height:2px;border-radius:2px;background:var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+
+/* ---------- sign card ---------- */
+.sign{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  border:1px solid var(--line);padding:10px 10px 12px;text-align:center;cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;min-width:0;
+}
+.sign:active{transform:scale(.97)}
+@media(hover:hover){.sign:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(120,98,70,.16)}}
+.sign .art{background:linear-gradient(180deg,#fff,#fdf3ea);border-radius:14px;padding:6px}
+.signart{display:block;width:100%;height:auto;aspect-ratio:200/212}
+.sign .w{margin-top:9px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:16px;color:var(--ink)}
+.sign.learned{border-color:#bfe3cf}
+.sign .badge{display:inline-flex;align-items:center;gap:4px;margin-top:3px;font-size:11px;font-weight:700;color:var(--green-d)}
+.sign .badge svg{width:13px;height:13px}
+.sign:not(.learned) .badge{display:none}
+
+/* ---------- detail ---------- */
+.detail .backlink{display:inline-flex;align-items:center;gap:6px;color:var(--green-d);font-weight:700;margin-bottom:10px}
+.detail .backlink svg{width:18px;height:18px}
+.detail-art{
+  background:linear-gradient(180deg,#fff,#fdf2e8);border-radius:24px;box-shadow:var(--shadow);
+  border:1px solid var(--line);padding:14px;max-width:320px;margin:0 auto 18px;
+}
+.detail-art .signart{max-width:300px;margin:0 auto}
+.detail h1{font-size:30px;text-align:center;color:var(--green-d);margin-bottom:14px}
+.howbox{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);padding:16px 18px;margin-bottom:14px}
+.howbox .label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--green);margin-bottom:5px}
+.howbox p{margin:0;font-size:17px}
+.tipbox{background:var(--peach);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px}
+.tipbox .label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--coral);margin-bottom:5px}
+.tipbox p{margin:0;font-size:16px;color:#8a4f3e}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;
+  padding:14px 18px;font-size:16px;font-weight:700;cursor:pointer;width:100%;transition:transform .1s}
+.btn:active{transform:scale(.98)}
+.btn svg{width:20px;height:20px}
+.btn-primary{background:var(--green);color:#fff}
+.btn-learned{background:var(--green-l);color:var(--green-d);box-shadow:inset 0 0 0 2px #bfe3cf}
+.btn-ghost{background:var(--card);color:var(--green-d);box-shadow:inset 0 0 0 2px var(--line)}
+.btnrow{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.official{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted);font-size:14px;font-weight:600;padding:6px}
+.official svg{width:16px;height:16px}
+
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:8px}
+.pager a{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;
+  font-weight:700;color:var(--green-d);box-shadow:var(--shadow);display:flex;align-items:center;gap:8px}
+.pager a.next{justify-content:flex-end}
+.pager a svg{width:18px;height:18px}
+.pager a.disabled{visibility:hidden}
+
+/* ---------- lessons ---------- */
+.lesson-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);
+  padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .12s}
+.lesson-card:active{transform:scale(.99)}
+.lesson-num{flex:0 0 auto;width:46px;height:46px;border-radius:14px;background:var(--green-l);color:var(--green-d);
+  display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:22px}
+.lesson-card.done .lesson-num{background:var(--green);color:#fff}
+.lesson-meta{flex:1;min-width:0}
+.lesson-meta h3{font-size:18px}
+.lesson-meta .bar{height:7px;border-radius:5px;background:var(--line);margin-top:9px;overflow:hidden}
+.lesson-meta .bar span{display:block;height:100%;background:var(--green);border-radius:5px;transition:width .4s}
+.lesson-meta small{color:var(--muted);font-weight:600}
+.lesson-card .chev{color:var(--muted)}
+.lesson-card .chev svg{width:22px;height:22px}
+
+.lesson-intro{background:var(--green-l);border-radius:var(--radius);padding:16px 18px;margin-bottom:8px;color:var(--green-d)}
+.coach{background:var(--peach);border-radius:var(--radius);padding:14px 16px;margin:14px 0 18px;color:#8a4f3e;font-size:15px;display:flex;gap:10px}
+.coach svg{flex:0 0 auto;width:22px;height:22px;color:var(--coral)}
+
+/* ---------- huskekort ---------- */
+.cheat{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);
+  padding:16px 16px 18px;margin-bottom:18px}
+.cheat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.cheat-head h3{font-size:20px;color:var(--green-d)}
+.cheat-head small{color:var(--muted);font-weight:600}
+.cheat .printbtn{flex:0 0 auto;border:none;background:var(--green-l);color:var(--green-d);font-weight:700;
+  border-radius:12px;padding:9px 12px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.cheat .printbtn svg{width:16px;height:16px}
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.cheat-item{text-align:center}
+.cheat-item .art{background:linear-gradient(180deg,#fff,#fdf3ea);border-radius:12px;border:1px solid var(--line);padding:4px}
+.cheat-item .w{margin-top:5px;font-weight:700;font-size:14px}
+
+/* ---------- about ---------- */
+.about p{font-size:16px}
+.method{display:grid;gap:12px;margin:6px 0 20px}
+.method-item{background:var(--card);border-radius:16px;border:1px solid var(--line);box-shadow:var(--shadow);padding:14px 16px}
+.method-item h4{margin:0 0 4px;font-family:'Baloo 2',sans-serif;color:var(--green-d);font-size:16px}
+.method-item p{margin:0;font-size:15px;color:var(--ink)}
+.source{background:var(--green-l);border-radius:var(--radius);padding:16px 18px;color:var(--green-d);font-size:14px;margin-top:10px}
+.source a{font-weight:700;text-decoration:underline}
+.disclaimer{font-size:13px;color:var(--muted);margin-top:14px;text-align:center}
+
+/* ---------- tab bar ---------- */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  display:flex;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);
+}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted);font-size:11px;font-weight:700}
+.tabbar a svg{width:24px;height:24px}
+.tabbar a.active{color:var(--green-d)}
+
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+
+/* ---------- print: only the chosen huskekort ---------- */
+@media print{
+  .topbar,.tabbar,.cheat .printbtn,.page-sub{display:none!important}
+  body{padding:0;background:#fff}
+  .view{max-width:none;padding:0}
+  .cheat{box-shadow:none;border:2px solid #ddd;break-inside:avoid;page-break-inside:avoid;margin:0}
+  .cheat:not(.printing){display:none!important}
+  .cheat.printing{display:block}
+  .cheat-grid{grid-template-columns:repeat(3,1fr)}
+}
