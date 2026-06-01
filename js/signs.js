@@ -184,7 +184,7 @@
   var TEGN = {
     spise: 301, drikke: 108, mere: 749, sove: 1043, faerdig: 664, vaske: 374,
     'toj-paa': 1315, 'toj-af': 663, mor: 305, far: 306, hjaelp: 525, av: 569,
-    stop: 753, barnevogn: 1367, ked: 638, soed: 540, bange: 423, vred: 1097,
+    stop: 753, barnevogn: 1367, ked: 479, soed: 540, bange: 423, vred: 1097,
     hvor: 1227, kat: 1479, fugl: 358, ko: 1918, hund: 482, bog: 294,
     musik: 1218, cykle: 593, lege: 204
   };

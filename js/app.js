@@ -125,6 +125,7 @@
       (s.stage ? '<div class="agechip">Kan typisk læres ' + esc(TS.stage(s.stage).label) + '</div>' : '') +
       '<a class="btn btn-video" href="' + videoURL(s) + '" target="_blank" rel="noopener">' + ICON.play +
         (TS.tegn(s.id) ? ' Se video af tegnet' : ' Se videoer (YouTube)') + '</a>' +
+      (TS.tegn(s.id) ? '<p class="videonote">Videoen viser tegnet i Ordbog over Dansk Tegnsprog. Babytegn er tit en lidt enklere udgave — følg “Sådan gør du”.</p>' : '') +
       '<div class="howbox"><div class="label">Sådan gør du</div><p>' + esc(s.how) + '</p></div>' +
       '<div class="tipbox"><div class="label">Brug det når…</div><p>' + esc(s.tip) + '</p></div>' +
       '<div class="btnrow">' +
