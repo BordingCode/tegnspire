@@ -110,18 +110,19 @@
     return wrap(x, y, rot, sc, flip, f);
   }
 
-  // PINCH — thumb + index tips meeting at an apex, other fingers curled
+  // PINCH — thumb + index tips meeting at one point, other fingers folded low
   function pinch(x, y, rot, sc, flip) {
-    var k = [3, 12], bumps = '';
-    for (var i = 0; i < 2; i++) bumps += '<rect x="' + (k[i] - 4.3) + '" y="-8" width="8.6" height="17" rx="4.3"' + S(2.1) + '/>';
-    var f = forearm() + bumps +
-      '<rect x="-14" y="-2" width="30" height="22" rx="11"' + S(2.5) + '/>' +
-      // index (left) angling up to apex
-      '<rect x="-7" y="-34" width="8.6" height="36" rx="4.3"' + S(2.3) + ' transform="rotate(22 -3 0)"/>' +
-      // thumb (right) angling up to apex
-      '<rect x="-1.5" y="-30" width="8.6" height="32" rx="4.3"' + S(2.3) + ' transform="rotate(-24 3 0)"/>' +
-      // apex (tips touching)
-      '<circle cx="-1" cy="-32" r="4" fill="' + SKIN + '" stroke="' + LINE + '" stroke-width="2"/>';
+    var f = forearm() +
+      // two folded fingers sitting low behind the palm (small, so they don't read as extra fingers)
+      '<rect x="-2" y="-3" width="8.2" height="15" rx="4.1"' + S(2) + '/>' +
+      '<rect x="6" y="-2" width="7.6" height="13" rx="3.8"' + S(2) + '/>' +
+      // palm
+      '<rect x="-13" y="0" width="27" height="20" rx="10"' + S(2.5) + '/>' +
+      // index (left) + thumb (right) converging to a single tip
+      '<rect x="-7.5" y="-30" width="8.4" height="34" rx="4.2"' + S(2.3) + ' transform="rotate(12 -3.3 3)"/>' +
+      '<rect x="-1.3" y="-30" width="8.4" height="34" rx="4.2"' + S(2.3) + ' transform="rotate(-15 2.9 3)"/>' +
+      // fingertips meeting
+      '<circle cx="-0.5" cy="-29" r="4" fill="' + SKIN + '" stroke="' + LINE + '" stroke-width="2"/>';
     return wrap(x, y, rot, sc, flip, f);
   }
 
@@ -138,7 +139,7 @@
     { id: 'spise', word: 'Mad / spise', cat: 'mad', stage: 1,
       how: 'Saml fingerspidserne på den ene hånd og før dem op til læberne — som om du putter mad i munden.',
       tip: 'Vis det lige før og mens barnet spiser: "Skal du have MAD?"',
-      art: svg(face() + pinch(112, 150, -22, 0.92) + arr('M120 116 q-6 -8 -14 -10')) },
+      art: svg(face() + pinch(110, 148, -20, 0.96) + arr('M116 112 q-6 -7 -13 -9')) },
     { id: 'drikke', word: 'Drikke', cat: 'mad', stage: 1,
       how: 'Form hånden som om du holder om et glas, før den op til munden og vip — en lille drikkebevægelse.',
       tip: 'Brug det ved kop, flaske og amning: "Vil du DRIKKE?"',
@@ -241,7 +242,7 @@
     { id: 'fugl', word: 'Fugl', cat: 'dyr', stage: 3,
       how: 'Tryk tommel- og pegefinger sammen foran munden og luk/åbn dem som et lille næb.',
       tip: 'Pip med, når I ser FUGLE ude: "Se en FUGL!"',
-      art: svg(face() + pinch(116, 150, -64, 0.78) + arr('M124 110 v-9') + arr('M124 122 v9')) },
+      art: svg(face() + pinch(118, 142, -66, 0.82) + arr('M128 104 v-9') + arr('M128 120 v9')) },
     { id: 'ko', word: 'Ko', cat: 'dyr', stage: 3,
       how: 'Sæt pegefingrene op ved siderne af hovedet som koens horn.',
       tip: 'Sig "muh" og lav tegnet — dyrelyde elsker små børn.',
