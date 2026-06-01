@@ -9,6 +9,8 @@
   /* ---------- tiny helpers ---------- */
   function el(html) { var t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  // strip SMIL animation → a calm static frame (used for grid thumbnails & print)
+  function staticArt(a) { return a.replace(/<animate[^>]*>/g, ''); }
   var ICON = {
     back: '<svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -33,7 +35,7 @@
   /* ---------- reusable bits ---------- */
   function signCard(s) {
     return '<div class="sign' + (isLearned(s.id) ? ' learned' : '') + '" data-go="#/tegn/' + s.id + '">' +
-      '<div class="art">' + s.art + '</div>' +
+      '<div class="art">' + staticArt(s.art) + '</div>' +
       '<div class="w">' + esc(s.word) + '</div>' +
       '<div class="badge">' + ICON.check + ' Lært</div>' +
       '</div>';
@@ -189,7 +191,7 @@
         '<button class="printbtn" data-print="' + c.id + '">' + ICON.print + ' Print</button></div>' +
         '<div class="cheat-grid">' +
           c.signs.map(function (sid) { var s = TS.byId(sid);
-            return '<div class="cheat-item" data-go="#/tegn/' + s.id + '"><div class="art">' + s.art + '</div><div class="w">' + esc(s.word) + '</div></div>';
+            return '<div class="cheat-item" data-go="#/tegn/' + s.id + '"><div class="art">' + staticArt(s.art) + '</div><div class="w">' + esc(s.word) + '</div></div>';
           }).join('') +
         '</div></div>';
     });
