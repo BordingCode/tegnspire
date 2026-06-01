@@ -48,6 +48,21 @@ button{font-family:inherit}
 .search input:focus{outline:none;border-color:var(--green)}
 .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted)}
 
+/* ---------- segmented toggle (situation / age) ---------- */
+.segmented{display:flex;gap:4px;background:var(--green-l);border-radius:14px;padding:4px;margin:0 0 6px}
+.segmented button{flex:1;border:none;background:transparent;color:var(--green-d);font-weight:700;font-size:14px;
+  padding:10px 8px;border-radius:11px;cursor:pointer;transition:background .15s,box-shadow .15s}
+.segmented button.on{background:var(--card);box-shadow:var(--shadow)}
+
+/* ---------- age-stage headers ---------- */
+.stage-h{display:flex;align-items:center;gap:10px;margin:22px 2px 2px}
+.stage-age{background:var(--green);color:#fff;font-weight:700;font-size:13px;border-radius:999px;padding:5px 12px;white-space:nowrap}
+.stage-title{font-family:'Baloo 2',sans-serif;font-weight:700;color:var(--green-d);font-size:18px}
+.stage-desc{margin:0 2px 14px;color:var(--muted);font-size:14px;line-height:1.45}
+.agechip{display:inline-block;margin:-6px auto 16px;background:var(--green-l);color:var(--green-d);
+  font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;text-align:center}
+.detail .agechip{display:block;width:fit-content}
+
 /* ---------- category & grids ---------- */
 .cat-h{display:flex;align-items:center;gap:10px;margin:22px 2px 12px;font-size:14px;
   text-transform:uppercase;letter-spacing:.12em;color:var(--green);font-weight:700}

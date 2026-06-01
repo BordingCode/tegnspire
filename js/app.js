@@ -25,6 +25,7 @@
   function saveSet(k, s) { try { localStorage.setItem(k, JSON.stringify(Array.from(s))); } catch (e) {} }
   var learned = getSet(LEARN_KEY);
   var lessonsDone = getSet(LESSON_KEY);
+  var ordbogMode = (function () { try { return localStorage.getItem('ts_ordbogmode') || 'situation'; } catch (e) { return 'situation'; } })();
   function isLearned(id) { return learned.has(id); }
   function toggleLearned(id) { if (learned.has(id)) learned.delete(id); else learned.add(id); saveSet(LEARN_KEY, learned); refreshChip(); }
   function refreshChip() { chip.textContent = learned.size + ' / ' + SIGNS.length + ' tegn lært'; }
@@ -40,18 +41,16 @@
   var TEGNSPROG = 'https://tegnsprog.dk/';
 
   /* ---------- views ---------- */
-  function vOrdbog(q) {
-    q = (q || '').trim().toLowerCase();
-    var matches = SIGNS.filter(function (s) { return !q || s.word.toLowerCase().indexOf(q) > -1; });
-    var html = '<h1 class="page-h">Ordbog</h1>' +
-      '<p class="page-sub">' + SIGNS.length + ' danske babytegn til hverdagens øjeblikke. Tryk på et tegn for at se det stort.</p>' +
-      '<div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
-      '<input id="q" type="search" inputmode="search" placeholder="Søg efter et tegn…" value="' + esc(q) + '" autocomplete="off"></div>';
-
-    if (!matches.length) {
-      html += '<p class="empty">Ingen tegn matcher "' + esc(q) + '".</p>';
-    } else if (q) {
-      html += '<div class="grid">' + matches.map(signCard).join('') + '</div>';
+  function groupedOrdbogHTML(mode) {
+    var html = '';
+    if (mode === 'alder') {
+      TS.STAGES.forEach(function (st) {
+        var inSt = SIGNS.filter(function (s) { return s.stage === st.id; });
+        if (!inSt.length) return;
+        html += '<div class="stage-h"><span class="stage-age">' + esc(st.label) + '</span><span class="stage-title">' + esc(st.title) + '</span></div>' +
+          '<p class="stage-desc">' + esc(st.desc) + '</p>' +
+          '<div class="grid">' + inSt.map(signCard).join('') + '</div>';
+      });
     } else {
       TS.CATEGORIES.forEach(function (c) {
         var inCat = SIGNS.filter(function (s) { return s.cat === c.id; });
@@ -59,38 +58,52 @@
         html += '<div class="cat-h">' + esc(c.name) + '</div><div class="grid">' + inCat.map(signCard).join('') + '</div>';
       });
     }
-    render(html, 'ordbog');
-    var input = document.getElementById('q');
-    if (input) {
-      input.addEventListener('input', function () {
-        var v = input.value;
-        history.replaceState(null, '', v ? '#/ordbog?q=' + encodeURIComponent(v) : '#/ordbog');
-        // re-render grid only, keep focus
-        rerenderOrdbogGrid(v);
-      });
-      if (q) { input.focus(); input.setSelectionRange(q.length, q.length); }
-    }
+    return html;
   }
-  function rerenderOrdbogGrid(v) {
-    var q = v.trim().toLowerCase();
-    var holder = document.getElementById('grid-holder') || (function () {
-      // wrap existing dynamic area
-      return null;
-    })();
-    // simplest robust approach: rebuild everything below the search input
-    var matches = SIGNS.filter(function (s) { return !q || s.word.toLowerCase().indexOf(q) > -1; });
+  function fillOrdbog(v) {
+    var q = (v || '').trim().toLowerCase();
     var below = document.getElementById('below-search');
     if (!below) return;
-    if (!matches.length) below.innerHTML = '<p class="empty">Ingen tegn matcher "' + esc(v) + '".</p>';
-    else if (q) below.innerHTML = '<div class="grid">' + matches.map(signCard).join('') + '</div>';
-    else {
-      var h = '';
-      TS.CATEGORIES.forEach(function (c) {
-        var inCat = SIGNS.filter(function (s) { return s.cat === c.id; });
-        if (inCat.length) h += '<div class="cat-h">' + esc(c.name) + '</div><div class="grid">' + inCat.map(signCard).join('') + '</div>';
-      });
-      below.innerHTML = h;
+    var seg = document.getElementById('seg');
+    if (q) {
+      if (seg) seg.style.display = 'none';
+      var matches = SIGNS.filter(function (s) { return s.word.toLowerCase().indexOf(q) > -1; });
+      below.innerHTML = matches.length ? '<div class="grid">' + matches.map(signCard).join('') + '</div>'
+        : '<p class="empty">Ingen tegn matcher "' + esc(v) + '".</p>';
+    } else {
+      if (seg) seg.style.display = '';
+      below.innerHTML = groupedOrdbogHTML(ordbogMode);
     }
+    bindGo();
+  }
+  function vOrdbog(q) {
+    q = (q || '').trim().toLowerCase();
+    var html = '<h1 class="page-h">Ordbog</h1>' +
+      '<p class="page-sub">' + SIGNS.length + ' danske babytegn. Tryk på et tegn for at se det stort.</p>' +
+      '<div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+      '<input id="q" type="search" inputmode="search" placeholder="Søg efter et tegn…" value="' + esc(q) + '" autocomplete="off"></div>' +
+      '<div class="segmented" id="seg">' +
+        '<button data-mode="situation"' + (ordbogMode === 'situation' ? ' class="on"' : '') + '>Efter situation</button>' +
+        '<button data-mode="alder"' + (ordbogMode === 'alder' ? ' class="on"' : '') + '>Efter alder</button>' +
+      '</div>' +
+      '<div id="below-search"></div>';
+    render(html, 'ordbog');
+    var input = document.getElementById('q');
+    fillOrdbog(q);
+    input.addEventListener('input', function () {
+      var v = input.value;
+      history.replaceState(null, '', v ? '#/ordbog?q=' + encodeURIComponent(v) : '#/ordbog');
+      fillOrdbog(v);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#seg button'), function (b) {
+      b.addEventListener('click', function () {
+        ordbogMode = b.getAttribute('data-mode');
+        try { localStorage.setItem('ts_ordbogmode', ordbogMode); } catch (e) {}
+        Array.prototype.forEach.call(document.querySelectorAll('#seg button'), function (x) { x.classList.toggle('on', x === b); });
+        fillOrdbog(document.getElementById('q').value);
+      });
+    });
+    if (q) { input.focus(); input.setSelectionRange(q.length, q.length); }
   }
 
   function vTegn(id) {
@@ -103,6 +116,7 @@
       '<a class="backlink" data-go="#/ordbog">' + ICON.back + ' Ordbog</a>' +
       '<div class="detail-art">' + s.art + '</div>' +
       '<h1>' + esc(s.word) + '</h1>' +
+      (s.stage ? '<div class="agechip">Kan typisk læres ' + esc(TS.stage(s.stage).label) + '</div>' : '') +
       '<div class="howbox"><div class="label">Sådan gør du</div><p>' + esc(s.how) + '</p></div>' +
       '<div class="tipbox"><div class="label">Brug det når…</div><p>' + esc(s.tip) + '</p></div>' +
       '<div class="btnrow">' +
@@ -201,8 +215,10 @@
       '<p class="page-sub">Babytegn er enkle håndtegn, du bruger sammen med talen, så dit barn kan "sige" fx <em>mere</em>, <em>mælk</em> eller <em>sove</em>, før det kan tale. Det giver færre frustrationer — og forskning peger på at det styrker sprog­udviklingen.</p>' +
       '<div class="method">' + method + '</div>' +
       '<div class="source"><strong>Hvor kommer tegnene fra?</strong><br>' +
-        'Tegnene i Tegnspire er danske babytegn baseret på <em>“Baby- og Børnetegn”</em> af Vibeke Manniche og dansk tegnsprog. ' +
-        'Illustrationerne er tegnet til Tegnspire som en huskestøtte. Det officielle opslagsværk er ' +
+        'Tegnene i Tegnspire er danske babytegn fra dansk tegnsprog, krydstjekket mod to uafhængige danske dagtilbuds-materialer: ' +
+        '<em>“Baby- og Børnetegn”</em> af Vibeke Manniche (Sct. Severin Børnehuse / Dagtilbud-Syd, Kerteminde) og ' +
+        'Rikke Winckler’s babytegn-oversigt (rikkewinckler.dk, Vuggestuen Margrethevej). ' +
+        'Illustrationerne er tegnet fra bunden til Tegnspire som en huskestøtte. Det officielle opslagsværk er ' +
         '<a href="' + TEGNSPROG + '" target="_blank" rel="noopener">Ordbog over Dansk Tegnsprog (tegnsprog.dk)</a> — slå et ord op der for at se en video af det rigtige tegn.</div>' +
       '<p class="disclaimer">Tegnspire er et lille hobbyprojekt lavet med kærlighed. Det erstatter ikke sundhedsplejerske eller fagperson.</p>' +
       '</div>';
@@ -211,11 +227,6 @@
 
   /* ---------- render + router ---------- */
   function render(html, tab) {
-    // wrap ordbog list area so search can re-render just below it
-    if (tab === 'ordbog' && html.indexOf('id="q"') > -1) {
-      var splitAt = html.indexOf('</div>', html.indexOf('class="search"')) + 6;
-      html = html.slice(0, splitAt) + '<div id="below-search">' + html.slice(splitAt) + '</div>';
-    }
     view.innerHTML = html;
     setActiveTab(tab);
     bindGo();
