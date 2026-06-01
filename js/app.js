@@ -9,9 +9,9 @@
   /* ---------- tiny helpers ---------- */
   function el(html) { var t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
-  // strip SMIL animation → a calm static frame (used for grid thumbnails & print)
-  function staticArt(a) { return a.replace(/<animate[^>]*>/g, ''); }
   var ICON = {
+    play: '<svg viewBox="0 0 24 24"><path d="M7 5v14l12-7z" fill="currentColor"/></svg>',
+    playdot: '<svg viewBox="0 0 24 24" class="playdot"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M9.5 8l7 4-7 4z" fill="#fff"/></svg>',
     back: '<svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -34,13 +34,14 @@
 
   /* ---------- reusable bits ---------- */
   function signCard(s) {
-    return '<div class="sign' + (isLearned(s.id) ? ' learned' : '') + '" data-go="#/tegn/' + s.id + '">' +
-      '<div class="art">' + staticArt(s.art) + '</div>' +
-      '<div class="w">' + esc(s.word) + '</div>' +
+    var c = TS.cat(s.cat) || { bg: '#eef1f4', ac: '#5a9e83' };
+    return '<div class="sign' + (isLearned(s.id) ? ' learned' : '') + '" data-go="#/tegn/' + s.id + '" style="--tile:' + c.bg + ';--ac:' + c.ac + '">' +
+      '<div class="tile">' + ICON.playdot + '<span class="tw">' + esc(s.word) + '</span></div>' +
       '<div class="badge">' + ICON.check + ' Lært</div>' +
       '</div>';
   }
   var TEGNSPROG = 'https://tegnsprog.dk/';
+  function videoURL(s) { return 'https://www.youtube.com/results?search_query=' + encodeURIComponent('babytegn ' + (s.vq || s.word)); }
 
   /* ---------- views ---------- */
   function groupedOrdbogHTML(mode) {
@@ -114,18 +115,20 @@
     var idx = SIGNS.indexOf(s);
     var prev = SIGNS[idx - 1], next = SIGNS[idx + 1];
     var done = isLearned(s.id);
-    var html = '<div class="detail">' +
+    var cc = TS.cat(s.cat) || { bg: '#eef1f4', ac: '#5a9e83' };
+    var html = '<div class="detail" style="--tile:' + cc.bg + ';--ac:' + cc.ac + '">' +
       '<a class="backlink" data-go="#/ordbog">' + ICON.back + ' Ordbog</a>' +
-      '<div class="detail-art">' + s.art + '</div>' +
+      '<div class="detail-tile"><span class="tw">' + esc(s.word) + '</span></div>' +
       '<h1>' + esc(s.word) + '</h1>' +
       (s.stage ? '<div class="agechip">Kan typisk læres ' + esc(TS.stage(s.stage).label) + '</div>' : '') +
+      '<a class="btn btn-video" href="' + videoURL(s) + '" target="_blank" rel="noopener">' + ICON.play + ' Se video af tegnet</a>' +
       '<div class="howbox"><div class="label">Sådan gør du</div><p>' + esc(s.how) + '</p></div>' +
       '<div class="tipbox"><div class="label">Brug det når…</div><p>' + esc(s.tip) + '</p></div>' +
       '<div class="btnrow">' +
-        '<button class="btn ' + (done ? 'btn-learned' : 'btn-primary') + '" id="learnbtn">' +
+        '<button class="btn ' + (done ? 'btn-learned' : 'btn-ghost') + '" id="learnbtn">' +
           (done ? ICON.check + ' Lært' : ICON.plus + ' Marker som lært') + '</button>' +
         '<a class="official" href="' + TEGNSPROG + '" target="_blank" rel="noopener">' +
-          ICON.ext + ' Se det officielle tegn i Ordbog over Dansk Tegnsprog</a>' +
+          ICON.ext + ' Officielt tegn i Ordbog over Dansk Tegnsprog</a>' +
       '</div>' +
       '<div class="pager">' +
         (prev ? '<a class="prev" data-go="#/tegn/' + prev.id + '">' + ICON.back + ' ' + esc(prev.word) + '</a>' : '<a class="prev disabled"></a>') +
@@ -190,8 +193,8 @@
         '<div class="cheat-head"><div><h3>' + esc(c.title) + '</h3><small>' + esc(c.sub) + '</small></div>' +
         '<button class="printbtn" data-print="' + c.id + '">' + ICON.print + ' Print</button></div>' +
         '<div class="cheat-grid">' +
-          c.signs.map(function (sid) { var s = TS.byId(sid);
-            return '<div class="cheat-item" data-go="#/tegn/' + s.id + '"><div class="art">' + staticArt(s.art) + '</div><div class="w">' + esc(s.word) + '</div></div>';
+          c.signs.map(function (sid) { var s = TS.byId(sid); var cc = TS.cat(s.cat) || { bg: '#eef1f4', ac: '#5a9e83' };
+            return '<div class="cheat-item" data-go="#/tegn/' + s.id + '" style="--tile:' + cc.bg + ';--ac:' + cc.ac + '"><div class="ctile"><span class="tw">' + esc(s.word) + '</span></div><div class="chow">' + esc(s.how) + '</div></div>';
           }).join('') +
         '</div></div>';
     });
@@ -220,8 +223,9 @@
         'Tegnene i Tegnspire er danske babytegn fra dansk tegnsprog, krydstjekket mod to uafhængige danske dagtilbuds-materialer: ' +
         '<em>“Baby- og Børnetegn”</em> af Vibeke Manniche (Sct. Severin Børnehuse / Dagtilbud-Syd, Kerteminde) og ' +
         'Rikke Winckler’s babytegn-oversigt (rikkewinckler.dk, Vuggestuen Margrethevej). ' +
-        'Illustrationerne er tegnet fra bunden til Tegnspire som en huskestøtte. Det officielle opslagsværk er ' +
-        '<a href="' + TEGNSPROG + '" target="_blank" rel="noopener">Ordbog over Dansk Tegnsprog (tegnsprog.dk)</a> — slå et ord op der for at se en video af det rigtige tegn.</div>' +
+        'Hvert tegn har en knap <strong>“Se video”</strong>, der åbner rigtige videoer af tegnet — så du ser den præcise bevægelse fra nogen der laver den. ' +
+        'Det officielle opslagsværk er ' +
+        '<a href="' + TEGNSPROG + '" target="_blank" rel="noopener">Ordbog over Dansk Tegnsprog (tegnsprog.dk)</a>.</div>' +
       '<p class="disclaimer">Tegnspire er et lille hobbyprojekt lavet med kærlighed. Det erstatter ikke sundhedsplejerske eller fagperson.</p>' +
       '</div>';
     render(html, 'om');

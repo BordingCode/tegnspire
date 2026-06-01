@@ -69,31 +69,29 @@ button{font-family:inherit}
 .cat-h::after{content:"";flex:1;height:2px;border-radius:2px;background:var(--line)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
 
-/* ---------- sign card ---------- */
-.sign{
-  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
-  border:1px solid var(--line);padding:10px 10px 12px;text-align:center;cursor:pointer;
-  transition:transform .12s ease, box-shadow .12s ease;min-width:0;
-}
+/* ---------- sign card (word-tile + play badge) ---------- */
+.sign{cursor:pointer;min-width:0;transition:transform .12s ease}
 .sign:active{transform:scale(.97)}
-@media(hover:hover){.sign:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(120,98,70,.16)}}
-.sign .art{background:linear-gradient(180deg,#fff,#fdf3ea);border-radius:14px;padding:6px}
-.signart{display:block;width:100%;height:auto;aspect-ratio:200/212}
-.sign .w{margin-top:9px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:16px;color:var(--ink)}
-.sign.learned{border-color:#bfe3cf}
-.sign .badge{display:inline-flex;align-items:center;gap:4px;margin-top:3px;font-size:11px;font-weight:700;color:var(--green-d)}
+@media(hover:hover){.sign:hover .tile{transform:translateY(-3px);box-shadow:0 12px 26px rgba(120,98,70,.18)}}
+.tile{position:relative;background:var(--tile);border-radius:var(--radius);box-shadow:var(--shadow);
+  border:1px solid rgba(0,0,0,.04);min-height:96px;padding:14px 12px;display:flex;align-items:center;justify-content:center;
+  transition:transform .12s ease, box-shadow .12s ease}
+.tile .tw{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:17px;color:#5a4632;text-align:center;line-height:1.15}
+.tile .playdot{position:absolute;top:9px;right:9px;width:20px;height:20px;color:var(--ac);opacity:.9}
+.sign.learned .tile{box-shadow:var(--shadow),inset 0 0 0 2.5px var(--ac)}
+.sign .badge{display:none;align-items:center;justify-content:center;gap:4px;margin-top:6px;font-size:11px;font-weight:700;color:var(--ac)}
 .sign .badge svg{width:13px;height:13px}
-.sign:not(.learned) .badge{display:none}
+.sign.learned .badge{display:flex}
 
 /* ---------- detail ---------- */
 .detail .backlink{display:inline-flex;align-items:center;gap:6px;color:var(--green-d);font-weight:700;margin-bottom:10px}
 .detail .backlink svg{width:18px;height:18px}
-.detail-art{
-  background:linear-gradient(180deg,#fff,#fdf2e8);border-radius:24px;box-shadow:var(--shadow);
-  border:1px solid var(--line);padding:14px;max-width:320px;margin:0 auto 18px;
-}
-.detail-art .signart{max-width:300px;margin:0 auto}
+.detail-tile{background:var(--tile);border-radius:24px;box-shadow:var(--shadow);
+  min-height:120px;display:flex;align-items:center;justify-content:center;padding:20px;margin:0 auto 16px}
+.detail-tile .tw{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:30px;color:#5a4632;text-align:center}
 .detail h1{font-size:30px;text-align:center;color:var(--green-d);margin-bottom:14px}
+.btn-video{background:var(--ac);color:#fff;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.btn-video svg{width:22px;height:22px}
 .howbox{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);padding:16px 18px;margin-bottom:14px}
 .howbox .label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--green);margin-bottom:5px}
 .howbox p{margin:0;font-size:17px}
@@ -147,10 +145,11 @@ button{font-family:inherit}
 .cheat .printbtn{flex:0 0 auto;border:none;background:var(--green-l);color:var(--green-d);font-weight:700;
   border-radius:12px;padding:9px 12px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .cheat .printbtn svg{width:16px;height:16px}
-.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
-.cheat-item{text-align:center}
-.cheat-item .art{background:linear-gradient(180deg,#fff,#fdf3ea);border-radius:12px;border:1px solid var(--line);padding:4px}
-.cheat-item .w{margin-top:5px;font-weight:700;font-size:14px}
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.cheat-item{cursor:pointer;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.cheat-item .ctile{background:var(--tile);padding:12px 8px;display:flex;align-items:center;justify-content:center}
+.cheat-item .ctile .tw{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15px;color:#5a4632;text-align:center}
+.cheat-item .chow{padding:8px 10px;font-size:12px;color:var(--ink);line-height:1.35}
 
 /* ---------- about ---------- */
 .about p{font-size:16px}
