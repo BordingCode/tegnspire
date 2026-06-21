@@ -44,4 +44,4 @@ self.addEventListener('fetch', function (e) {
   );
 });
 
-// hub-stats tracker v1
+// hub-stats tracker v2
