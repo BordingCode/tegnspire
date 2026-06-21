@@ -43,3 +43,5 @@ self.addEventListener('fetch', function (e) {
     })
   );
 });
+
+// hub-stats tracker v1
