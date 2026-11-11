@@ -1,5 +1,5 @@
 /* Tegnspire service worker — offline-first for the app shell. */
-var CACHE = 'tegnspire-v7';
+var CACHE = 'tegnspire-v8';
 var ASSETS = [
   './',
   './index.html',
